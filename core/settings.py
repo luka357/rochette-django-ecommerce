@@ -1,11 +1,16 @@
+import os
 from pathlib import Path
 from datetime import timedelta
 
+from dotenv import load_dotenv
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / '.env')
 
 
-SECRET_KEY = 'django-insecure-ecm#9)aad6&ow(eo=sh)v8^klmh5(g5f$)8o&jqhsyhc*k4*%b'
+
+SECRET_KEY = os.environ['DJANGO_SECRET_KEY']
 
 DEBUG = True
 

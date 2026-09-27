@@ -5,18 +5,18 @@ A full-stack e-commerce web application for browsing and purchasing watches, bui
 ## Features
 
 - 🔐 JWT-based user authentication (registration & login)
-- 🛒 Shopping cart functionality
-- 🔍 Product filtering by category and sorting
-- 📄 Contact form
-- 📚 API documentation via Swagger
+- 🛒 Shopping cart (stored in the browser with localStorage)
+- 🔍 Product filtering by category and sorting by price or name
+- 📄 Contact form saved to the database
+- 📚 OpenAPI schema and Swagger UI through drf-spectacular
 - 🌐 CORS configuration for frontend-backend communication
 
 ## Tech Stack
 
-**Backend:** Python, Django, Django REST Framework, Simple JWT  
+**Backend:** Python, Django, Django REST Framework, Simple JWT, django-filter  
 **Frontend:** JavaScript, HTML, SCSS  
 **Database:** SQLite  
-**API Docs:** Swagger (drf-yasg)
+**API Docs:** drf-spectacular (Swagger UI)
 
 ## Getting Started
 
@@ -31,21 +31,41 @@ A full-stack e-commerce web application for browsing and purchasing watches, bui
    pip install -r requirements.txt
 ```
 
-3. Run migrations
+3. Create a `.env` file in the project root
+```
+   DJANGO_SECRET_KEY=your-secret-key-here
+```
+
+4. Run migrations
 ```bash
    python manage.py migrate
 ```
 
-4. Start the development server
+5. Start the development server
 ```bash
    python manage.py runserver
 ```
 
+6. Open the frontend: serve the `luka/` folder (for example with VS Code Live Server) and open `index.html`. The frontend expects the API at `http://127.0.0.1:8000`.
+
+## API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| `POST` | `/api/register/` | — | Register a new user |
+| `POST` | `/api/token/` | — | Get a JWT access and refresh token pair |
+| `POST` | `/api/token/refresh/` | — | Refresh the access token |
+| `GET` / `POST` | `/api/watches/` | — | List or create watches (`?category=<id>`, `?ordering=price`) |
+| `GET` / `PUT` / `PATCH` / `DELETE` | `/api/watches/<id>/` | JWT | Watch detail, update or delete |
+| `GET` / `POST` | `/api/categories/` | — | List or create categories |
+| `POST` | `/api/contact/` | — | Send a contact message |
+| `GET` | `/api/schema/swagger-ui/` | — | Interactive API docs |
+
 ## Project Structure
 
 - `core/` — Django project settings, DRF, JWT, Swagger, CORS configuration
-- `watches/` — Main app: products, categories, filtering, sorting
-- `luka/` — User registration, authentication, cart, contact form
+- `watches/` — Main app: watch and category models, contact messages, registration, filtering and sorting
+- `luka/` — Frontend (HTML, SCSS, vanilla JS): shop, cart, login and register pages, contact form
 
 ## Author
 

@@ -1,4 +1,3 @@
-from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.filters import OrderingFilter
@@ -8,7 +7,7 @@ from rest_framework.views import APIView
 
 from .models import Watch, Category, ContactMessage
 from .permissions import IsAdminOrReadOnly
-from .serializers import WatchSerializer, CategorySerializer, ContactMessageSerializer
+from .serializers import WatchSerializer, CategorySerializer, ContactMessageSerializer, RegisterSerializer
 
 
 # მომხმარებლის რეგისტრაცია
@@ -16,14 +15,9 @@ class RegisterView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        username = request.data.get('username')
-        email = request.data.get('email')
-        password = request.data.get('password')
-
-        if User.objects.filter(username=username).exists():
-            return Response({'username': 'Username already exists!'}, status=status.HTTP_400_BAD_REQUEST)
-
-        User.objects.create_user(username=username, email=email, password=password)
+        serializer = RegisterSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response({'message': 'User created successfully!'}, status=status.HTTP_201_CREATED)
 
 

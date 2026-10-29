@@ -2,11 +2,12 @@ from django.contrib.auth.models import User
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics, status
 from rest_framework.filters import OrderingFilter
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Watch, Category, ContactMessage
+from .permissions import IsAdminOrReadOnly
 from .serializers import WatchSerializer, CategorySerializer, ContactMessageSerializer
 
 
@@ -37,7 +38,7 @@ class ContactCreateView(generics.CreateAPIView):
 class WatchListCreateView(generics.ListCreateAPIView):
     queryset = Watch.objects.all()
     serializer_class = WatchSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminOrReadOnly]
     filter_backends = [OrderingFilter, DjangoFilterBackend]
     ordering_fields = ['price', 'name']
     filterset_fields = ['category']
@@ -47,11 +48,11 @@ class WatchListCreateView(generics.ListCreateAPIView):
 class WatchRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Watch.objects.all()
     serializer_class = WatchSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 # კატეგორიების სია და დამატება
 class CategoryListCreateView(generics.ListCreateAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminOrReadOnly]
